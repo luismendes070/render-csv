@@ -1,23 +1,40 @@
-// ChatGPT prompt solution for maximum call stack
-import { NextApiRequest, NextApiResponse } from "next";
-import httpProxyMiddleware from "http-proxy-middleware";
+// ChatGPT
+import https from 'https'; // Import the 'https' module
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const proxy = httpProxyMiddleware({
-      target: "http://localhost:3001/your-csv-route", // Replace with your server port
-      pathRewrite: { "^/api": "" }, // Remove '/api' prefix from incoming requests
-    });
+  const postData = JSON.stringify({
+    'msg': 'Hello World!',
+  });
 
-    // Check if the request should be handled by the proxy
-    if (req.url.startsWith("/api")) {
-      proxy(req, res); // Forward the request to the proxy
-    } else {
-      // Handle other requests here
-      res.status(404).json({ message: "Not Found" });
-    }
-  } catch (error: any) {
-    console.error("Proxy error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  const options = {
+    hostname: 'www.google.com',
+    port: 443, // Use port 443 for HTTPS
+    path: '/upload',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData),
+    },
+  };
+
+  const request = https.request(options, (response) => {
+    console.log(`STATUS: ${response.statusCode}`);
+    console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+    response.setEncoding('utf8');
+    response.on('data', (chunk) => {
+      console.log(`BODY: ${chunk}`);
+    });
+    response.on('end', () => {
+      console.log('No more data in response.');
+    });
+  });
+
+  request.on('error', (error) => {
+    console.error(`Problem with request: ${error.message}`);
+  });
+
+  // Write data to the request body
+  request.write(postData);
+  request.end();
 }
