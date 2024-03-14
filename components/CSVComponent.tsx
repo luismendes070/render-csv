@@ -1,3 +1,5 @@
+// Vercel 
+import { SpeedInsights } from "@vercel/speed-insights/next"
 // ChatGPT components/CSVComponent.tsx
 // import React from 'react';
 
