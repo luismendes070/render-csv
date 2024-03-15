@@ -1,7 +1,7 @@
 // ChatGPT components/__tests__/CSVComponent.test.tsx
 import React from 'react';
 // import { render, screen } from '@testing-library/react';
-import CSVComponent from '../CSVComponent';
+import CSVComponent from '../components/CSVComponent';
 
 // components/__tests__/CSVComponent.test.tsx
 // import React from 'react';
