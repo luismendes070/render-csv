@@ -6,20 +6,22 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 // components/CSVComponent.tsx
 import React, { useState, useEffect } from 'react';
 
+// ChatGPT catch promise
 const CSVComponent: React.FC = () => {
   const [csvData, setCsvData] = useState<string>('');
 
   useEffect(() => {
-    fetch('/data.csv')
-      .then((response) => response.text())
-      .then((data) => setCsvData(data));
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/data.csv');
-      const data = await response.text();
-      setCsvData(data);
+      try {
+        const response = await fetch('/data.csv');
+        if (!response.ok) {
+          throw new Error('Failed to fetch CSV data');
+        }
+        const data = await response.text();
+        setCsvData(data);
+      } catch (error) {
+        console.error('Error fetching CSV data:', error);
+      }
     };
     fetchData();
   }, []);
@@ -34,6 +36,7 @@ const CSVComponent: React.FC = () => {
 };
 
 export default CSVComponent;
+
 
 
 
