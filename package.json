@@ -33,6 +33,7 @@
     "@mui/material": "^5.15.13",
     "@vercel/speed-insights": "^1.0.10",
     "auth0": "^4.3.1",
+    "auth0-web": "^2.3.0",
     "axios": "^1.6.8",
     "csv-parser": "^3.0.0",
     "jest-environment-jsdom": "^29.7.0",

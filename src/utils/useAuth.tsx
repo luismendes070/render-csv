@@ -34,7 +34,7 @@ const useAuth = (): AuthContextState => {
       setUser(storage.getItem('user'));
     }
 
-    const unsubscribe = storage.on('change', (event) => {
+    const unsubscribe = storage.on('change', (event: { key: string; newValue: string; }) => {
       if (event.key === 'isLoggedIn') {
         setIsAuthenticated(event.newValue === 'true');
       }
