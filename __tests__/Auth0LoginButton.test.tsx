@@ -1,6 +1,7 @@
+import React from 'react';
 // ChatGPT Auth0
 // components/__tests__/Auth0LoginButton.test.tsx
-import React from 'react';
+
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Auth0LoginButton from '../components/Auth0LoginButton'; // Assume this component handles Auth0 login
 
