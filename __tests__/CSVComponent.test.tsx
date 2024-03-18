@@ -7,6 +7,8 @@ import CSVComponent from '../components/CSVComponent';
 // components/__tests__/CSVComponent.test.tsx
 // import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import jest from 'next/jest';
+import test, { describe, it } from 'node:test';
 // import CSVComponent from '../CSVComponent';
 
 // CSVComponent.test.tsx
@@ -52,3 +54,7 @@ describe('CSVComponent', () => {
     expect(csvLink).toHaveAttribute('download');
   });
 });
+function expect(csvDataElement: HTMLElement) {
+  throw new Error('Function not implemented.');
+}
+

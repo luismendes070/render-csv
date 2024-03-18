@@ -4,6 +4,7 @@ import React from 'react';
 
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Auth0LoginButton from '../components/Auth0LoginButton'; // Assume this component handles Auth0 login
+import { describe, it } from 'node:test';
 
 describe('Auth0LoginButton', () => {
   it('redirects user to Auth0 login page on click', async () => {
@@ -17,4 +18,8 @@ describe('Auth0LoginButton', () => {
     });
   });
 });
+
+function expect(assign: (url: string | URL) => void) {
+  throw new Error('Function not implemented.');
+}
 
