@@ -1,5 +1,6 @@
 // Gemini prompt NextJS 14 typescript webpack 5 auth0 jest testing-library render csv
-import { useState, useEffect } from 'react';
+import useState from 'react';
+import useEffect from 'react';
 import createWebStorage from 'auth0-web';
 
 interface AuthContextState {
@@ -9,7 +10,7 @@ interface AuthContextState {
   logout: () => void;
 }
 
-const storage = createWebStorage();
+const storage = new createWebStorage(this);
 
 const useAuth = (): AuthContextState => {
   const [isAuthenticated, setIsAuthenticated] = useState(storage.getItem('isLoggedIn') === 'true');
