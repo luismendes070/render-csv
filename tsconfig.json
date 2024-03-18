@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
     "target": "es5",
-    "module": "esnext",
-    "allowJs": true,
-    "jsx": "preserve",
+    "module": "commonjs",
+    "lib": ["dom", "es2017", "dom.iterable", "esnext"],
+    "jsx": "react",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "lib": ["dom", "es2017", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "incremental": true,
     "plugins": [
