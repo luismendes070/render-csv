@@ -1,8 +1,7 @@
-// ChatGPT 
+// ChatGPT change for auth0-web is deprecated
 
 import { useState, useEffect } from 'react';
-
-import createWebStorage from 'auth0-web';
+import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 
 interface AuthContextState {
   isAuthenticated: boolean;
@@ -10,8 +9,6 @@ interface AuthContextState {
   login: () => void;
   logout: () => void;
 }
-
-const storage = new createWebStorage(this);
 
 let useAuth: () => AuthContextState = () => {
   // Default implementation
@@ -24,60 +21,63 @@ let useAuth: () => AuthContextState = () => {
 };
 
 try {
+  let auth0: Auth0Client | null = null;
+
   useAuth = (): AuthContextState => {
-    const [isAuthenticated, setIsAuthenticated] = useState(storage.getItem('isLoggedIn') === 'true');
-    const [user, setUser] = useState(storage.getItem('user'));
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
-      const handleRedirectCallback = () => {
-        setIsAuthenticated(true);
-        setUser(window.location.hash.substring(1).split('&').reduce((acc, cur) => {
-          const [key, value] = cur.split('=');
-          acc[key] = value;
-          return acc;
-        }, {}));
+      const initAuth0 = async () => {
+        auth0 = await createAuth0Client({
+          domain: 'AUTH0_BASE_URL',
+          client_id: 'AUTH0_CLIENT_ID',
+          redirect_uri: window.location.origin
+        });
+
+        if (window.location.search.includes('code=')) {
+          try {
+            await auth0.handleRedirectCallback();
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (error) {
+            console.error('Error handling redirect callback:', error);
+          }
+        }
+
+        const isAuthenticated = await auth0.isAuthenticated();
+        setIsAuthenticated(isAuthenticated);
+
+        if (isAuthenticated) {
+          const user = await auth0.getUser();
+          setUser(user);
+        }
       };
 
-      // Handle the redirect callback from Auth0
-      if (window.location.hash) {
-        handleRedirectCallback();
-      } else {
-        const isLoggedIn = storage.getItem('isLoggedIn');
-        setIsAuthenticated(isLoggedIn === 'true');
-        setUser(storage.getItem('user'));
-      }
+      initAuth0();
 
-      const unsubscribe = storage.on('change', (event: { key: string; newValue: string; }) => {
-        if (event.key === 'isLoggedIn') {
-          setIsAuthenticated(event.newValue === 'true');
+      return () => {
+        if (auth0) {
+          auth0.close();
         }
-        if (event.key === 'user') {
-          setUser(event.newValue);
-        }
-      });
-
-      return unsubscribe;
+      };
     }, []);
 
     const login = async () => {
-      storage.authorize({
-        redirectUri: window.location.origin,
-      });
+      if (auth0) {
+        await auth0.loginWithRedirect();
+      }
     };
 
-    const logout = async () => {
-      storage.clear();
-      setIsAuthenticated(false);
-      setUser(null);
-      // Redirect to logout URL (optional)
+    const logout = () => {
+      if (auth0) {
+        auth0.logout({ returnTo: window.location.origin });
+      }
     };
 
     return { isAuthenticated, user, login, logout };
   };
-} catch (error:any) {
-  console.log(error.message);
-} finally {
-  // Your existing finally block code
+} catch (error) {
+  console.error('Error initializing Auth0:', error);
 }
 
 export default useAuth;
